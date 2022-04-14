@@ -1,21 +1,22 @@
 package com.me.architecture_study.service
 
 import com.me.architecture_study.data.source.remote.UserRemote
+import com.me.architecture_study.data.source.remote.UserRemoteResponse
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Headers
 
-private const val BASE_URL = "https://dummyapi.io/data/v1/"
 
-private val retrofit =
-    Retrofit.Builder()
-        .addConverterFactory(
-            ScalarsConverterFactory.create()
-        ).baseUrl(
-            BASE_URL
-        ).build()
+private const val APP_ID= "625675b297240a4c3006f9f3"
+
 
 interface UserApiService {
+    @Headers(
+        "app-id: $APP_ID"
+    )
     @GET("user")
-    suspend fun getUser(): List<UserRemote>
+    suspend fun getUser(): UserRemoteResponse
 }

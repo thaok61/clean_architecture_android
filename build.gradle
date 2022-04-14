@@ -14,4 +14,6 @@ ext {
     roomVersion = "2.4.2"
     coroutineVersion = "1.6.0"
     retrofitVersion = "2.9.0"
+    moshiVersion = "1.9.3"
+    daggerVersion = "2.41"
 }

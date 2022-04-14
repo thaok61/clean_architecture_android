@@ -1,29 +1,29 @@
-package com.me.architecture_study.data.source.remote
+package com.me.architecture_study.data.source.local
 
 import com.me.architecture_study.data.source.Result
 import com.me.architecture_study.data.source.UserDataSource
 import com.me.architecture_study.model.User
-import com.me.architecture_study.service.UserApiService
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-class UserRemoteDataSource internal constructor(
-    private val userApiService: UserApiService,
-    private val ioDispatcher: CoroutineDispatcher
+class UsersLocalDataSource internal constructor(
+    private val usersDao: UsersDao,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UserDataSource {
     override suspend fun getUsers(): Result<List<User>> = withContext(ioDispatcher) {
         return@withContext try {
-            val listUsers = userApiService.getUser().data.map {
+            val users = usersDao.getUsers().map {
                 it.toUser()
             }
-            Result.Success(listUsers)
+            Result.Success(users)
         } catch (e: Exception) {
             Result.Error(e)
         }
     }
 
-    override suspend fun addUser(user: User) {
-        TODO("Not yet implemented")
+    override suspend fun addUser(user: User) = withContext(ioDispatcher) {
+        usersDao.insertUser(user.toUserLocal())
     }
 }

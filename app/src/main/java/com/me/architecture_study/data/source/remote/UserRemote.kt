@@ -1,19 +1,31 @@
 package com.me.architecture_study.data.source.remote
 
 import com.me.architecture_study.model.User
+import com.squareup.moshi.Json
 
 data class UserRemote(
+    @Json(name = "id")
     val id: String,
+    @Json(name = "title")
     val title: String,
+    @Json(name = "firstName")
     val firstName: String,
+    @Json(name = "lastName")
     val lastName: String,
-    val gender: String,
-    val email: String,
-    val dateOfBirth: String,
-    val registerDate: String,
-    val phone: String,
+    @Json(name = "gender")
+    val gender: String?,
+    @Json(name = "email")
+    val email: String?,
+    @Json(name = "dateOfBirth")
+    val dateOfBirth: String?,
+    @Json(name = "registerDate")
+    val registerDate: String?,
+    @Json(name = "phone")
+    val phone: String?,
+    @Json(name = "picture")
     val picture: String,
-    val location: LocationRemote
+    @Json(name = "location")
+    val location: LocationRemote?
 ) {
     fun toUser() = User(
         id,
@@ -26,6 +38,6 @@ data class UserRemote(
         registerDate,
         phone,
         picture,
-        location.toLocation()
+        location?.toLocation()
     )
 }
