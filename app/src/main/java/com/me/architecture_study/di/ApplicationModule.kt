@@ -1,17 +1,18 @@
 package com.me.architecture_study.di
 
 import android.content.Context
-import android.service.autofill.UserData
 import androidx.room.Room
-import com.me.architecture_study.MainActivity
+import com.me.architecture_study.view.MainActivity
+import com.me.architecture_study.data.source.DefaultUserRepository
 import com.me.architecture_study.data.source.UserDataSource
+import com.me.architecture_study.data.source.UsersRepository
 import com.me.architecture_study.data.source.local.UserDatabase
 import com.me.architecture_study.data.source.local.UsersLocalDataSource
 import com.me.architecture_study.data.source.remote.UserRemoteDataSource
 import com.me.architecture_study.service.UserApiService
-import com.me.architecture_study.viewmodel.UserViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
@@ -88,8 +89,11 @@ object ApplicationModule {
         return Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     }
 }
+
 @Module
 abstract class ActivityModuleBuilder {
-    @ContributesAndroidInjector
-    abstract fun inject() : MainActivity
+
+    @Singleton
+    @Binds
+    abstract fun bindRepository(repo: DefaultUserRepository): UsersRepository
 }

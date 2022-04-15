@@ -26,4 +26,16 @@ class UserRemoteDataSource internal constructor(
     override suspend fun addUser(user: User) {
         TODO("Not yet implemented")
     }
+
+    override suspend fun addAllUser(users: List<User>) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteAllUsers() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteUser(userId: String): Int {
+        TODO("Not yet implemented")
+    }
 }

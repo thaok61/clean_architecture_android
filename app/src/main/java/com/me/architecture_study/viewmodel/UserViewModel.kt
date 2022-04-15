@@ -7,16 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.me.architecture_study.data.source.Result
 import com.me.architecture_study.data.source.UserDataSource
-import com.me.architecture_study.data.source.remote.UserRemote
-import com.me.architecture_study.di.ApplicationModule
-import com.me.architecture_study.di.DaggerApplicationComponent
+import com.me.architecture_study.data.source.UsersRepository
 import com.me.architecture_study.model.User
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
 
 private val TAG = UserViewModel::class.java.simpleName
-class UserViewModel @Inject constructor(@ApplicationModule.UsersRemoteDataSource private val userRemoteDataSource: UserDataSource,) : ViewModel() {
+
+class UserViewModel @Inject constructor(private val userRepository: UsersRepository) :
+    ViewModel() {
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> = _users
 
@@ -27,7 +27,7 @@ class UserViewModel @Inject constructor(@ApplicationModule.UsersRemoteDataSource
     private fun getUser() {
         viewModelScope.launch {
             try {
-                val result = userRemoteDataSource.getUsers()
+                val result = userRepository.getUsers(false)
                 if (result is Result.Success) {
                     _users.value = result.data!!
                 } else {

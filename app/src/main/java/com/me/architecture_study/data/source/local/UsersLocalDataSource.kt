@@ -26,4 +26,17 @@ class UsersLocalDataSource internal constructor(
     override suspend fun addUser(user: User) = withContext(ioDispatcher) {
         usersDao.insertUser(user.toUserLocal())
     }
+
+    override suspend fun addAllUser(users: List<User>) {
+        val localUsers = users.map { it.toUserLocal() }
+        usersDao.insertAllUser(localUsers)
+    }
+
+    override suspend fun deleteAllUsers() = withContext(ioDispatcher) {
+        usersDao.deleteAllUsers()
+    }
+
+    override suspend fun deleteUser(userId: String): Int = withContext(ioDispatcher) {
+        usersDao.deleteUserById(userId)
+    }
 }

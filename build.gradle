@@ -16,4 +16,7 @@ ext {
     retrofitVersion = "2.9.0"
     moshiVersion = "1.9.3"
     daggerVersion = "2.41"
+    lifecycle_version = "2.4.1"
+    fragment_version = "1.4.1"
+    coil_version = "2.0.0-rc03"
 }
