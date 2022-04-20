@@ -1,5 +1,6 @@
 package com.me.architecture_study.data.source.local
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -21,4 +22,7 @@ interface UsersDao {
 
     @Query("DELETE FROM users WHERE id = :userId")
     suspend fun deleteUserById(userId: String): Int
+
+    @Query("SELECT * FROM USERS")
+    fun getPagingUsers(): PagingSource<Int, UserLocal>
 }
