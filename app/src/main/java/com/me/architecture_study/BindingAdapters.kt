@@ -1,6 +1,9 @@
 package com.me.architecture_study
 
+import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -19,5 +22,14 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
 @BindingAdapter("listUserData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<User>?) {
     val adapter = recyclerView.adapter as UserAdapter
+    Log.d("bindRecyclerView", "bindRecyclerView: data")
     adapter.submitList(data)
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("setTitle")
+fun bindTitle(textView: TextView, title: String?) {
+    title?.let {
+        textView.text = it[0].uppercase() + it.substring(1)
+    }
 }

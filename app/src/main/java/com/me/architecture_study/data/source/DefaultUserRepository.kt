@@ -88,4 +88,19 @@ class DefaultUserRepository @Inject constructor(
         userLocalDataSource.addAllUser(data)
     }
 
+    private suspend fun loadMore(data: List<User>) {
+        userLocalDataSource.addAllUser(data)
+    }
+
+    override suspend fun loadMoreFromRemote(page: Int): Result<List<User>> {
+        return when (val remoteUsers = userRemoteDataSource.getUsers()) {
+            is Result.Error -> Result.Error(Exception("Refresh failed"))
+            is Result.Success -> {
+                loadMore(remoteUsers.data)
+                remoteUsers
+            }
+            else -> throw IllegalStateException()
+        }
+    }
+
 }

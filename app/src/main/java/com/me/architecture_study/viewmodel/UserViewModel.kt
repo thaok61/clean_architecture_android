@@ -19,19 +19,37 @@ class UserViewModel @Inject constructor(private val userRepository: UsersReposit
     ViewModel() {
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> = _users
+    private val _currentPage = MutableLiveData<Int>(0)
+    val currentPage: LiveData<Int> = _currentPage
 
     init {
         getUser()
     }
 
-    private fun getUser() {
+    fun getUser(page: Int = 0) {
         viewModelScope.launch {
             try {
-                val result = userRepository.getUsers(false)
-                if (result is Result.Success) {
-                    _users.value = result.data!!
+                val result = if (page == 0) {
+                    userRepository.getUsers(false)
                 } else {
-                    _users.value = listOf()
+                    userRepository.loadMoreFromRemote(page)
+                }
+                if (result is Result.Success) {
+
+                    if (page == 0) {
+                        _users.value = result.data!!
+                    } else {
+                        if (page != _currentPage.value) {
+                            val tempList: ArrayList<User> = ArrayList(_users.value!!)
+                            tempList.addAll(result.data)
+                            _users.value = tempList
+                            _currentPage.value = page
+                        }
+                    }
+                } else {
+                    if (page == 0) {
+                        _users.value = listOf()
+                    }
                 }
 
                 Log.d(TAG, "getUser: ${_users.value!!.size}")
