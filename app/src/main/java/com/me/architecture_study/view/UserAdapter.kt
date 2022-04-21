@@ -2,12 +2,13 @@ package com.me.architecture_study.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.me.architecture_study.databinding.ItemUserPreviewBinding
 import com.me.architecture_study.model.User
 
-class UserAdapter : ListAdapter<User, UserViewHolder>(DiffCallBack) {
+class UserAdapter : PagingDataAdapter<User, UserViewHolder>(DiffCallBack) {
 
     companion object {
         private val DiffCallBack = object : DiffUtil.ItemCallback<User>() {
@@ -28,6 +29,8 @@ class UserAdapter : ListAdapter<User, UserViewHolder>(DiffCallBack) {
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = getItem(position)
-        holder.bind(user)
+        if (user != null) {
+            holder.bind(user)
+        }
     }
 }

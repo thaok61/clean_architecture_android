@@ -5,20 +5,21 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.me.architecture_study.data.source.local.RemoteKeysDao
-import com.me.architecture_study.data.source.local.RemoteKeysLocal
+import com.me.architecture_study.data.model.UserData
+import com.me.architecture_study.data.model.RemoteKeysLocal
 import com.me.architecture_study.data.source.local.UserDatabase
 import com.me.architecture_study.service.UserApiService
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
 const val STARTING_PAGE_INDEX = 0
 @OptIn(ExperimentalPagingApi::class)
-class UserRemoteMediator(private val service: UserApiService, private val userDatabase: UserDatabase):
-    RemoteMediator<Int, UserRemote>() {
+class UserRemoteMediator @Inject constructor(private val service: UserApiService, private val userDatabase: UserDatabase):
+    RemoteMediator<Int, UserData>() {
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, UserRemote>
+        state: PagingState<Int, UserData>
     ): MediatorResult {
         val page = when (loadType) {
             LoadType.REFRESH -> {
@@ -61,12 +62,8 @@ class UserRemoteMediator(private val service: UserApiService, private val userDa
                 val keys = users.map {
                     RemoteKeysLocal(userId = it.id, prevKey = prevKey, nextKey = nextKey)
                 }
-
-                val usersLocal = users.map {
-                    it.toLocal()
-                }
                 userDatabase.remotesKeyDao().insertAll(keys)
-                userDatabase.usersDao().insertAllUser(usersLocal)
+                userDatabase.usersDao().insertAllUser(users)
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (exception: IOException) {
@@ -76,7 +73,7 @@ class UserRemoteMediator(private val service: UserApiService, private val userDa
         }
     }
 
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, UserRemote>): RemoteKeysLocal? {
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, UserData>): RemoteKeysLocal? {
         // Get the last page that was retrieved, that contained items.
         // From that last page, get the last item
         return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
@@ -86,7 +83,7 @@ class UserRemoteMediator(private val service: UserApiService, private val userDa
             }
     }
 
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, UserRemote>): RemoteKeysLocal? {
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, UserData>): RemoteKeysLocal? {
         // Get the first page that was retrieved, that contained items.
         // From that first page, get the first item
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
@@ -97,7 +94,7 @@ class UserRemoteMediator(private val service: UserApiService, private val userDa
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(
-        state: PagingState<Int, UserRemote>
+        state: PagingState<Int, UserData>
     ): RemoteKeysLocal? {
         // The paging library is trying to load data after the anchor position
         // Get the item closest to the anchor position

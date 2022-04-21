@@ -19,13 +19,6 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
     }
 }
 
-@BindingAdapter("listUserData")
-fun bindRecyclerView(recyclerView: RecyclerView, data: List<User>?) {
-    val adapter = recyclerView.adapter as UserAdapter
-    Log.d("bindRecyclerView", "bindRecyclerView: data")
-    adapter.submitList(data)
-}
-
 @SuppressLint("SetTextI18n")
 @BindingAdapter("setTitle")
 fun bindTitle(textView: TextView, title: String?) {

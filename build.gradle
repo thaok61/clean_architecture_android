@@ -12,6 +12,7 @@ task clean(type: Delete) {
 ext {
     nav_version = "2.4.2"
     roomVersion = "2.4.2"
+    roomPagingVersion = "2.5.0-alpha01"
     coroutineVersion = "1.6.0"
     retrofitVersion = "2.9.0"
     moshiVersion = "1.9.3"

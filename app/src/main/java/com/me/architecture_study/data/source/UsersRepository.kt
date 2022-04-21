@@ -1,8 +1,9 @@
 package com.me.architecture_study.data.source
 
+import androidx.paging.PagingData
 import com.me.architecture_study.model.User
+import kotlinx.coroutines.flow.Flow
 
 interface UsersRepository {
-    suspend fun getUsers(forceUpdate: Boolean): Result<List<User>>
-    suspend fun loadMoreFromRemote(page: Int = 0): Result<List<User>>
+    fun getUsers(): Flow<PagingData<User>>
 }

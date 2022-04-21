@@ -1,10 +1,9 @@
-package com.me.architecture_study.data.source.remote
+package com.me.architecture_study.data.model
 
-import com.me.architecture_study.data.source.local.LocationLocal
 import com.me.architecture_study.model.Location
 import com.squareup.moshi.Json
 
-data class LocationRemote(
+data class LocationData(
     @Json(name = "street")
    val street: String,
     @Json(name = "city")
@@ -17,5 +16,4 @@ data class LocationRemote(
     val timezone: String
 ) {
     fun toLocation() = Location(street, city, state, country, timezone)
-    fun toLocal() = LocationLocal(street, city, state, country, timezone)
 }

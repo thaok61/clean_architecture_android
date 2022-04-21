@@ -5,10 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.me.architecture_study.data.source.Result
-import com.me.architecture_study.data.source.UserDataSource
 import com.me.architecture_study.data.source.UsersRepository
 import com.me.architecture_study.model.User
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
@@ -17,46 +18,26 @@ private val TAG = UserViewModel::class.java.simpleName
 
 class UserViewModel @Inject constructor(private val userRepository: UsersRepository) :
     ViewModel() {
-    private val _users = MutableLiveData<List<User>>()
-    val users: LiveData<List<User>> = _users
-    private val _currentPage = MutableLiveData<Int>(0)
-    val currentPage: LiveData<Int> = _currentPage
+
+    private val _uiState = MutableStateFlow(ListUserScreenState())
+    val uiState: StateFlow<ListUserScreenState> = _uiState
 
     init {
         getUser()
     }
 
-    fun getUser(page: Int = 0) {
+    private fun getUser(page: Int = 0) {
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            try {
-                val result = if (page == 0) {
-                    userRepository.getUsers(false)
-                } else {
-                    userRepository.loadMoreFromRemote(page)
-                }
-                if (result is Result.Success) {
-
-                    if (page == 0) {
-                        _users.value = result.data!!
-                    } else {
-                        if (page != _currentPage.value) {
-                            val tempList: ArrayList<User> = ArrayList(_users.value!!)
-                            tempList.addAll(result.data)
-                            _users.value = tempList
-                            _currentPage.value = page
-                        }
-                    }
-                } else {
-                    if (page == 0) {
-                        _users.value = listOf()
-                    }
-                }
-
-                Log.d(TAG, "getUser: ${_users.value!!.size}")
-            } catch (e: Exception) {
-                Log.d(TAG, "getUser: $e")
-                _users.value = listOf()
+            userRepository.getUsers().collectLatest { paging ->
+                _uiState.update { it.copy(userItem = paging) }
             }
         }
+        _uiState.update { it.copy(isLoading = false) }
     }
 }
+
+data class ListUserScreenState(
+    val isLoading: Boolean = false,
+    val userItem: PagingData<User> = PagingData.empty(),
+)

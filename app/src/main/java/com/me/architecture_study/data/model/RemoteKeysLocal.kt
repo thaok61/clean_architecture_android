@@ -1,4 +1,4 @@
-package com.me.architecture_study.data.source.local
+package com.me.architecture_study.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

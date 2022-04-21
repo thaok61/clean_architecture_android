@@ -54,6 +54,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt("androidx.room:room-compiler:$roomVersion")
+    implementation "androidx.room:room-paging:$roomPagingVersion"
 
     //Coroutine ViewModel
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"

@@ -1,11 +1,6 @@
 package com.me.architecture_study.service
 
-import com.me.architecture_study.data.source.remote.UserRemote
-import com.me.architecture_study.data.source.remote.UserRemoteResponse
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import com.me.architecture_study.data.model.UserRemoteResponse
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
