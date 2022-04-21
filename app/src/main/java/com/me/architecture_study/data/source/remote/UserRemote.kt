@@ -1,5 +1,6 @@
 package com.me.architecture_study.data.source.remote
 
+import com.me.architecture_study.data.source.local.UserLocal
 import com.me.architecture_study.model.User
 import com.squareup.moshi.Json
 
@@ -39,5 +40,19 @@ data class UserRemote(
         phone,
         picture,
         location?.toLocation()
+    )
+
+    fun toLocal() = UserLocal(
+        id,
+        title,
+        firstName,
+        lastName,
+        gender,
+        email,
+        dateOfBirth,
+        registerDate,
+        phone,
+        picture,
+        location?.toLocal()
     )
 }
